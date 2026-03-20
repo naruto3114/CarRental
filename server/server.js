@@ -29,6 +29,24 @@ app.get('/api/imagekit-auth', (req, res) => {
     res.send(result);
 });
 
+const authenticator = async () => {
+    try {
+        // Replace with your actual Render backend URL
+        const response = await fetch(`https://carrental-n3kt.onrender.com/api/imagekit-auth`);
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Request failed with status ${response.status}: ${errorText}`);
+        }
+
+        const data = await response.json();
+        const { signature, expire, token } = data;
+        return { signature, expire, token };
+    } catch (error) {
+        throw new Error(`Authentication request failed: ${error.message}`);
+    }
+};
+
 app.use('/api/user', userRouters)
 app.use('/api/owner', ownerRouter)
 app.use('/api/bookings', bookingRouter)
